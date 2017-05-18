@@ -42,9 +42,6 @@ ONBUILD COPY ./backend /usr/share/nginx/node/
 
 # Config Nginx
 COPY nginx.conf /etc/nginx/conf.d
-ONBUILD RUN sed -i s/API_BASE_URL/$API_BASE_URL/g /etc/nginx/conf.d/api.conf \
-  && sed -i s/FRONTEND_BASE_URL/$FRONTEND_BASE_URL/g /etc/nginx/conf.d/frontend.conf \
-  && sed -i s/MANAGEMENT_FRONTEND_BASE_URL/$MANAGEMENT_FRONTEND_BASE_URL/g /etc/nginx/conf.d/management.frontend.conf
 
 WORKDIR /usr/share/nginx/node/
 EXPOSE 80
