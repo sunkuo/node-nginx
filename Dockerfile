@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:7.6
 MAINTAINER sunkuo <sunkuo@chuxin.ren>
 
 ENV NGINX_VERSION 1.13.0-1~jessie
@@ -15,27 +15,26 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 RUN yarn global add node-gyp
 
 # Make use of Docker Cache to install node modules
-ONBUILD COPY ./backend/package.json /usr/share/nginx/node/
-ONBUILD COPY ./backend/yarn.lock /usr/share/nginx/node/
-ONBUILD RUN cd /usr/share/nginx/node && yarn install
+ONBUILD COPY ./management-frontend/package.json /management-tmp/
+ONBUILD RUN cd /management-tmp && yarn install
 
 ONBUILD COPY ./frontend/package.json /tmp/
 ONBUILD COPY ./frontend/yarn.lock /tmp/
 ONBUILD RUN cd /tmp && yarn install
 
-ONBUILD COPY ./management-frontend/package.json /management-tmp/
-ONBUILD RUN cd /management-tmp && yarn install
-
-
-# Build Frontend File
-ONBUILD COPY ./frontend /tmp/
-ONBUILD RUN cd /tmp && yarn run build
-ONBUILD RUN mv /tmp/dist /usr/share/nginx/frontend
+ONBUILD COPY ./backend/package.json /usr/share/nginx/node/
+ONBUILD COPY ./backend/yarn.lock /usr/share/nginx/node/
+ONBUILD RUN cd /usr/share/nginx/node && yarn install
 
 # Build Management Frontend File
 ONBUILD COPY ./management-frontend /management-tmp/
 ONBUILD RUN cd /management-tmp && yarn run build
 ONBUILD RUN mv /management-tmp/dist /usr/share/nginx/management
+
+# Build Frontend File
+ONBUILD COPY ./frontend /tmp/
+ONBUILD RUN cd /tmp && yarn run build
+ONBUILD RUN mv /tmp/dist /usr/share/nginx/frontend
 
 # Copy Backend File
 ONBUILD COPY ./backend /usr/share/nginx/node/
