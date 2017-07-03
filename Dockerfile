@@ -8,10 +8,6 @@ RUN curl -O -s http://obf68by4u.bkt.clouddn.com/nginx_signing.key && apt-key add
 		echo 'deb-src http://nginx.org/packages/mainline/debian/ jessie nginx' >> /etc/apt/sources.list && rm nginx_signing.key
 RUN apt-get update && apt-get install nginx=${NGINX_VERSION}
 
-# forward request and error logs to docker log collector
-RUN ln -sf /dev/stdout /var/log/nginx/access.log \
-	&& ln -sf /dev/stderr /var/log/nginx/error.log
-
 RUN yarn global add node-gyp
 
 # Make use of Docker Cache to install node modules
