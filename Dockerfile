@@ -12,6 +12,7 @@ RUN yarn global add node-gyp
 
 # Make use of Docker Cache to install node modules
 ONBUILD COPY ./management-frontend/package.json /management-tmp/
+ONBUILD COPY ./management-frontend/yarn.lock /management-tmp/
 ONBUILD RUN cd /management-tmp && yarn install
 
 ONBUILD COPY ./frontend/package.json /tmp/
